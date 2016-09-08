@@ -2,10 +2,18 @@ package blackjack;
 import java.util.*;
 
 public class Blackjack implements BlackjackEngine {
-	
+	private Random rand;
 	private final int standardDeckSize = 52;
 	private int numberOfDecks;
 	
+	private List<Card> gameDeck;
+	private List<Card> playerDeck;
+	private List<Card> dealerDeck;
+	
+	private int gameStatus;
+	
+	private int betAmount;
+	private int accountAmount;
 	
 	/**
 	 * Constructor you must provide.  Initializes the player's account 
@@ -16,8 +24,14 @@ public class Blackjack implements BlackjackEngine {
 	 * @param numberOfDecks
 	 */
 	public Blackjack(Random randomGenerator, int numberOfDecks) {
-	    throw new UnsupportedOperationException("You must implement this method.");
+	    this.rand = randomGenerator;
+	    this.numberOfDecks = numberOfDecks;
 	    
+	    gameDeck = new ArrayList<Card>();
+	    playerDeck = new ArrayList<Card>();
+	    dealerDeck = new ArrayList<Card>();
+	    
+	    gameStatus = 0;
 	}
 	
 	/**
@@ -25,14 +39,18 @@ public class Blackjack implements BlackjackEngine {
 	 * @return number of decks
 	 */
 	public int getNumberOfDecks() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		return numberOfDecks;
 	}
 	
 	/**
 	 * Creates and shuffles the card deck(s) using a random number generator.
 	 */
 	public void createAndShuffleGameDeck() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		gameDeck.clear();
+		for(int i = 0; i < numberOfDecks; i++){
+			gameDeck.addAll(generateDeck());
+		}
+		Collections.shuffle(gameDeck, rand);
 	}
 	
 	/**
@@ -40,7 +58,7 @@ public class Blackjack implements BlackjackEngine {
 	 * @return Card array representing deck of cards.
 	 */
 	public Card[] getGameDeck() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		return gameDeck.toArray(new Card[gameDeck.size()]);
 	}
 	
 	/**
@@ -51,7 +69,25 @@ public class Blackjack implements BlackjackEngine {
 	 * Delete the bet amount from the account.
 	 */
 	public void deal() {	
-		throw new UnsupportedOperationException("You must implement this method.");
+		Card card;
+		
+		card = gameDeck.remove(0);
+		card.setFaceUp();
+		playerDeck.add(card);
+		
+		card = gameDeck.remove(0);
+		card.setFaceDown();
+		dealerDeck.add(card);
+
+		card = gameDeck.remove(0);
+		card.setFaceUp();
+		playerDeck.add(card);
+		
+		card = gameDeck.remove(0);
+		card.setFaceUp();
+		dealerDeck.add(card);
+		
+		accountAmount -= betAmount;
 	}
 		
 	/**
@@ -59,7 +95,7 @@ public class Blackjack implements BlackjackEngine {
 	 * @return Card array representing the dealer's cards.
 	 */
 	public Card[] getDealerCards() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		return dealerDeck.toArray(new Card[gameDeck.size()]);
 	}
 
 	/**
@@ -72,7 +108,31 @@ public class Blackjack implements BlackjackEngine {
 	 * must appear in the first array entry.
 	 */
 	public int[] getDealerCardsTotal() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		int[] totals;
+		boolean hasAce = false;
+		
+		int total = 0;
+		
+		for(Card card : dealerDeck){
+			if(card.getValue().getIntValue() == CardValue.Ace.getIntValue()){
+				hasAce = true;
+			}
+			total += card.getValue().getIntValue();
+		}
+		
+		if(total > 21)
+			return null;
+		
+		if(hasAce && total < 12){
+			totals = new int[2];
+			totals[0] = total;
+			totals[1] = total + 10;
+			return totals;
+		}
+		
+		totals = new int[1];
+		totals[0] = total;
+		return totals;
 	}
 
 	/**
@@ -86,7 +146,29 @@ public class Blackjack implements BlackjackEngine {
 	 * LESS_THAN_21, BUST, BLACKJACK, HAS_21
 	 */
 	public int getDealerCardsEvaluation() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		int[] cards = getDealerCardsTotal();
+		
+		if(cards == null){ // Decks with a total over 21
+			return Blackjack.BUST;
+		}
+		
+		if(cards[0] == 21){ // Decks without aces that equal 21
+			return Blackjack.HAS_21;
+		}
+		if(cards.length == 1){ // Decks without aces that are less than 21
+			return Blackjack.LESS_THAN_21;
+		}
+		
+		if(cards[1] < 21){ // Decks with aces are less than 21 with either value
+			return Blackjack.LESS_THAN_21;
+		}
+		
+		if(dealerDeck.size() == 2){ // Only two cards
+			return Blackjack.BLACKJACK;
+		}
+		else { // More than two cards
+			return Blackjack.HAS_21;
+		}
 	}
 	
 	/**
@@ -94,7 +176,7 @@ public class Blackjack implements BlackjackEngine {
 	 * @return Card array representing the player's cards.
 	 */
 	public Card[] getPlayerCards() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		return playerDeck.toArray(new Card[gameDeck.size()]);
 	}
 	
 	/**
@@ -107,7 +189,31 @@ public class Blackjack implements BlackjackEngine {
 	 * must appear in the first array entry.
 	 */
 	public int[] getPlayerCardsTotal() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		int[] totals;
+		boolean hasAce = false;
+		
+		int total = 0;
+		
+		for(Card card : playerDeck){
+			if(card.getValue().getIntValue() == CardValue.Ace.getIntValue()){
+				hasAce = true;
+			}
+			total += card.getValue().getIntValue();
+		}
+		
+		if(total > 21)
+			return null;
+		
+		if(hasAce && total < 12){
+			totals = new int[2];
+			totals[0] = total;
+			totals[1] = total + 10;
+			return totals;
+		}
+		
+		totals = new int[1];
+		totals[0] = total;
+		return totals;
 	}
 		
 	/**
@@ -121,7 +227,29 @@ public class Blackjack implements BlackjackEngine {
 	 * LESS_THAN_21, BUST, BLACKJACK, HAS_21
 	 */
 	public int getPlayerCardsEvaluation() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		int[] cards = getPlayerCardsTotal();
+		
+		if(cards == null){ // Decks with a total over 21
+			return Blackjack.BUST;
+		}
+		
+		if(cards[0] == 21){ // Decks without aces that equal 21
+			return Blackjack.HAS_21;
+		}
+		if(cards.length == 1){ // Decks without aces that are less than 21
+			return Blackjack.LESS_THAN_21;
+		}
+		
+		if(cards[1] < 21){ // Decks with aces are less than 21 with either value
+			return Blackjack.LESS_THAN_21;
+		}
+		
+		if(playerDeck.size() == 2){ // Only two cards
+			return Blackjack.BLACKJACK;
+		}
+		else { // More than two cards
+			return Blackjack.HAS_21;
+		}
 	}
 	
 	/**
@@ -131,7 +259,15 @@ public class Blackjack implements BlackjackEngine {
 	 * the game's status is GAME_IN_PROGRESS.
 	 */
 	public void playerHit() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		playerDeck.add(gameDeck.remove(0));
+		
+		if(getPlayerCardsEvaluation() == Blackjack.BUST){
+			gameStatus = Blackjack.DEALER_WON;
+			return;
+		}
+		
+		gameStatus = Blackjack.GAME_IN_PROGRESS;
+		
 	}
 	
 	/**
@@ -149,47 +285,50 @@ public class Blackjack implements BlackjackEngine {
 	 *
 	 */
 	public void playerStand() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		dealerDeck.get(0).setFaceUp();
 	}
 	
+	/**
+	 * Returns an integer representing the game status.   
+	 * @return DRAW, PLAYER_WON, DEALER_WON OR GAME_IN_PROGRESS
+	 */public int getGameStatus() {
+		return gameStatus;
+	}
+
 	/** 
 	 * Updates the bet amount to the provided value 
 	 */
-	public int getGameStatus() {
-		throw new UnsupportedOperationException("You must implement this method.");
+	public void setBetAmount(int amount) {
+		betAmount = amount;
 	}
 	
 	/**
 	 * Returns an integer representing the bet amount.
 	 * @return bet amount.
 	 */
-	public void setBetAmount(int amount) {
-		throw new UnsupportedOperationException("You must implement this method.");
+	public int getBetAmount() {
+		return betAmount;
 	}
 	
 	/**
 	 * Updates the player's account with the parameter value.
 	 * @param amount 
 	 */
-	public int getBetAmount() {
-		throw new UnsupportedOperationException("You must implement this method.");
+	public void setAccountAmount(int amount) {	
+		accountAmount = amount;
 	}
 	
 	/**
 	 * Returns the player's account amount
 	 * @return account amount
 	 */
-	public void setAccountAmount(int amount) {	
-		throw new UnsupportedOperationException("You must implement this method.");
-	}
-	
-	/**
-	 * Returns an integer representing the game status.   
-	 * @return DRAW, PLAYER_WON, DEALER_WON OR GAME_IN_PROGRESS
-	 */
 	public int getAccountAmount() {
-		throw new UnsupportedOperationException("You must implement this method.");
+		return accountAmount;
 	}
 	
 	/* Feel Free to add any private methods you might need */
+	private List<Card> generateDeck(){
+		// TODO finish method
+		return null;
+	}
 }
