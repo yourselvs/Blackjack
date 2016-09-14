@@ -2,7 +2,6 @@ package blackjack;
 import java.util.*;
 
 public class Blackjack implements BlackjackEngine {
-<<<<<<< Blackjack.java
 	private Random rand;
 	private final int standardDeckSize = 52;
 	private int numberOfDecks;
@@ -15,12 +14,7 @@ public class Blackjack implements BlackjackEngine {
 	
 	private int betAmount;
 	private int accountAmount;
-=======
-	private Random rand;
-	private int numberOfDecks;
->>>>>>> 1.4
 	
-<<<<<<< Blackjack.java
 	/**
 	 * Constructor you must provide.  Initializes the player's account 
 	 * to 200 and the initial bet to 5.  Feel free to initialize any other
@@ -38,44 +32,8 @@ public class Blackjack implements BlackjackEngine {
 	    dealerDeck = new ArrayList<Card>();
 	    
 	    gameStatus = 0;
-=======
-	private List<Card> gameDeck;
-	private List<Card> playerDeck;
-	private List<Card> dealerDeck;
-	
-	private int gameStatus;
-	
-	private int betAmount;
-	private int accountAmount;
-	
-	public Blackjack(Random randomGenerator, int numberOfDecks) { // WORKS
-	    this.rand = randomGenerator;
-	    this.numberOfDecks = numberOfDecks;
-	    
-	    gameDeck = new ArrayList<Card>();
-	    playerDeck = new ArrayList<Card>();
-	    dealerDeck = new ArrayList<Card>();
-	    
-	    gameStatus = 0;
-	    
-	    betAmount = 5;
-	    accountAmount = 200;
 	}
 	
-	public int getNumberOfDecks() { // WORKS
-		return numberOfDecks;
-	}
-	
-	public void createAndShuffleGameDeck() { // WORKS
-		gameDeck.clear();
-		for(int i = 0; i < numberOfDecks; i++){
-			gameDeck.addAll(generateDeck());
-		}
-		Collections.shuffle(gameDeck, rand);
->>>>>>> 1.4
-	}
-	
-<<<<<<< Blackjack.java
 	/**
 	 * Returns the number of decks being used. 
 	 * @return number of decks
@@ -101,10 +59,6 @@ public class Blackjack implements BlackjackEngine {
 	 */
 	public Card[] getGameDeck() {
 		return gameDeck.toArray(new Card[gameDeck.size()]);
-=======
-	public Card[] getGameDeck() { // WORKS
-		return gameDeck.toArray(new Card[gameDeck.size()]);
->>>>>>> 1.4
 	}
 	
 	/**
@@ -115,7 +69,6 @@ public class Blackjack implements BlackjackEngine {
 	 * Delete the bet amount from the account.
 	 */
 	public void deal() {	
-<<<<<<< Blackjack.java
 		Card card;
 		
 		card = gameDeck.remove(0);
@@ -135,33 +88,6 @@ public class Blackjack implements BlackjackEngine {
 		dealerDeck.add(card);
 		
 		accountAmount -= betAmount;
-=======
-		Card card;
-		
-		createAndShuffleGameDeck();
-		playerDeck.clear();
-		dealerDeck.clear();
-		
-		card = gameDeck.remove(0);
-		card.setFaceUp();
-		playerDeck.add(card);
-		
-		card = gameDeck.remove(0);
-		card.setFaceDown();
-		dealerDeck.add(card);
-
-		card = gameDeck.remove(0);
-		card.setFaceUp();
-		playerDeck.add(card);
-		
-		card = gameDeck.remove(0);
-		card.setFaceUp();
-		dealerDeck.add(card);
-		
-		accountAmount -= betAmount;
-		
-		gameStatus = Blackjack.GAME_IN_PROGRESS;
->>>>>>> 1.4
 	}
 		
 	/**
@@ -169,11 +95,7 @@ public class Blackjack implements BlackjackEngine {
 	 * @return Card array representing the dealer's cards.
 	 */
 	public Card[] getDealerCards() {
-<<<<<<< Blackjack.java
 		return dealerDeck.toArray(new Card[gameDeck.size()]);
-=======
-		return dealerDeck.toArray(new Card[dealerDeck.size()]);
->>>>>>> 1.4
 	}
 
 	/**
@@ -224,7 +146,6 @@ public class Blackjack implements BlackjackEngine {
 	 * LESS_THAN_21, BUST, BLACKJACK, HAS_21
 	 */
 	public int getDealerCardsEvaluation() {
-<<<<<<< Blackjack.java
 		int[] cards = getDealerCardsTotal();
 		
 		if(cards == null){ // Decks with a total over 21
@@ -248,31 +169,6 @@ public class Blackjack implements BlackjackEngine {
 		else { // More than two cards
 			return Blackjack.HAS_21;
 		}
-=======
-		int[] cards = getDealerCardsTotal();
-		
-		if(cards == null){ // Decks with a total over 21
-			return Blackjack.BUST;
-		}
-		
-		if(cards[0] == 21){ // Decks without aces that equal 21
-			return Blackjack.HAS_21;
-		}
-		if(cards.length == 1){ // Decks without aces that are less than 21
-			return Blackjack.LESS_THAN_21;
-		}
-		
-		if(cards[1] < 21){ // Decks with aces are less than 21 w/ either value
-			return Blackjack.LESS_THAN_21;
-		}
-		
-		if(dealerDeck.size() == 2){ // Only two cards
-			return Blackjack.BLACKJACK;
-		}
-		else { // More than two cards
-			return Blackjack.HAS_21;
-		}
->>>>>>> 1.4
 	}
 	
 	/**
@@ -280,11 +176,7 @@ public class Blackjack implements BlackjackEngine {
 	 * @return Card array representing the player's cards.
 	 */
 	public Card[] getPlayerCards() {
-<<<<<<< Blackjack.java
 		return playerDeck.toArray(new Card[gameDeck.size()]);
-=======
-		return playerDeck.toArray(new Card[playerDeck.size()]);
->>>>>>> 1.4
 	}
 	
 	/**
@@ -335,7 +227,6 @@ public class Blackjack implements BlackjackEngine {
 	 * LESS_THAN_21, BUST, BLACKJACK, HAS_21
 	 */
 	public int getPlayerCardsEvaluation() {
-<<<<<<< Blackjack.java
 		int[] cards = getPlayerCardsTotal();
 		
 		if(cards == null){ // Decks with a total over 21
@@ -359,31 +250,6 @@ public class Blackjack implements BlackjackEngine {
 		else { // More than two cards
 			return Blackjack.HAS_21;
 		}
-=======
-		int[] cards = getPlayerCardsTotal();
-		
-		if(cards == null){ // Decks with a total over 21
-			return Blackjack.BUST;
-		}
-		
-		if(cards[0] == 21){ // Decks without aces that equal 21
-			return Blackjack.HAS_21;
-		}
-		if(cards.length == 1){ // Decks without aces that are less than 21
-			return Blackjack.LESS_THAN_21;
-		}
-		
-		if(cards[1] < 21){ // Decks with aces are less than 21 w/ either value
-			return Blackjack.LESS_THAN_21;
-		}
-		
-		if(playerDeck.size() == 2){ // Only two cards
-			return Blackjack.BLACKJACK;
-		}
-		else { // More than two cards
-			return Blackjack.HAS_21;
-		}
->>>>>>> 1.4
 	}
 	
 	/**
@@ -419,150 +285,50 @@ public class Blackjack implements BlackjackEngine {
 	 *
 	 */
 	public void playerStand() {
-<<<<<<< Blackjack.java
 		dealerDeck.get(0).setFaceUp();
-=======
-		dealerDeck.get(0).setFaceUp();
-		
-		while(getDealerCardsEvaluation() != Blackjack.BUST && !dealerHas16()){
-			dealerDeck.add(gameDeck.remove(0));
-		}
-		
-		if(getDealerCardsEvaluation() == Blackjack.BUST){
-			gameStatus = Blackjack.PLAYER_WON;
-		}
-		else{
-			int playerValue = getHighestValue(getPlayerCardsTotal());
-			int dealerValue = getHighestValue(getDealerCardsTotal());
-			
-			if(playerValue > dealerValue){
-				gameStatus = Blackjack.PLAYER_WON;
-			}
-			else if(dealerValue > playerValue){
-				gameStatus = Blackjack.DEALER_WON;
-			}
-			else{
-				gameStatus = Blackjack.DRAW;
-			}
-		}
-		
-		if(gameStatus == Blackjack.PLAYER_WON){
-			accountAmount += betAmount * 2;
-		}
-		else if(gameStatus == Blackjack.DRAW){
-			accountAmount += betAmount;
-		}
->>>>>>> 1.4
 	}
 	
-<<<<<<< Blackjack.java
 	/**
 	 * Returns an integer representing the game status.   
 	 * @return DRAW, PLAYER_WON, DEALER_WON OR GAME_IN_PROGRESS
 	 */public int getGameStatus() {
 		return gameStatus;
-=======
-	public int getGameStatus() {
-		return gameStatus;
 	}
-
-	public void setBetAmount(int amount) { // WORKS
-		betAmount = amount;
->>>>>>> 1.4
-	}
-<<<<<<< Blackjack.java
 
 	/** 
 	 * Updates the bet amount to the provided value 
 	 */
 	public void setBetAmount(int amount) {
 		betAmount = amount;
-=======
-	
-	public int getBetAmount() { // WORKS
-		return betAmount;
 	}
 	
-	public void setAccountAmount(int amount) { // WORKS
-		accountAmount = amount;
->>>>>>> 1.4
-	}
-	
-<<<<<<< Blackjack.java
 	/**
 	 * Returns an integer representing the bet amount.
 	 * @return bet amount.
 	 */
 	public int getBetAmount() {
 		return betAmount;
-=======
-	public int getAccountAmount() { // WORKS
-		return accountAmount;
->>>>>>> 1.4
 	}
 	
-<<<<<<< Blackjack.java
 	/**
 	 * Updates the player's account with the parameter value.
 	 * @param amount 
 	 */
 	public void setAccountAmount(int amount) {	
 		accountAmount = amount;
-=======
-	/* Feel Free to add any private methods you might need */ 
-	private List<Card> generateDeck(){
-		List<Card> deck = new ArrayList<Card>();
-		
-		for(CardSuit suit : CardSuit.values()){
-			for(CardValue value : CardValue.values()){
-				deck.add(new Card(value, suit));
-			}
-		}
-		
-		return deck;	
->>>>>>> 1.4
 	}
 	
-<<<<<<< Blackjack.java
 	/**
 	 * Returns the player's account amount
 	 * @return account amount
 	 */
 	public int getAccountAmount() {
 		return accountAmount;
-=======
-	private boolean dealerHas16(){
-		int[] values = getDealerCardsTotal();
-		
-		if(values[0] >= 16){ // values with
-			return true;
-		}
-		
-		if(values.length == 1){
-			return false;
-		}
-		
-		if(values[1] >= 16){
-			return true;
-		}
-		
-		return false;
->>>>>>> 1.4
 	}
 	
-<<<<<<< Blackjack.java
 	/* Feel Free to add any private methods you might need */
 	private List<Card> generateDeck(){
 		// TODO finish method
 		return null;
 	}
-=======
-	private int getHighestValue(int[] values){		
-		if(values.length == 1){
-			return values[0];
-		}
-		
-		return values[1];
-	}
->>>>>>> 1.4
 }
